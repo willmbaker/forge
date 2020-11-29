@@ -139,7 +139,6 @@ function clang.compile( toolset, target )
         cc = settings.clang.cc;
     end
     local source = target:dependency();
-    print( leaf(source) );
     local dependencies = ('%s.d'):format( target );
     local output = target:filename();
     local input = absolute( source );
@@ -147,6 +146,7 @@ function clang.compile( toolset, target )
         cc, 
         ('%s %s -MMD -MF "%s" -o "%s" "%s"'):format(leaf(cc), ccflags, dependencies, output, input)
     );
+    print( leaf(source) );
     clang.parse_dependencies_file( toolset, dependencies, target );
 end
 

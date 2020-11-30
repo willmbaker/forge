@@ -64,6 +64,7 @@ function clang.initialize( toolset )
         exceptions = true;
         fast_floating_point = false;
         generate_map_file = true;
+        include_all_symbols = false;
         incremental_linking = true;
         link_time_code_generation = false;
         minimal_rebuild = true;
@@ -182,6 +183,11 @@ function clang.link( toolset, target )
         local prototype = dependency:prototype();
         if prototype == toolset.StaticLibrary or prototype == toolset.DynamicLibrary then
             table.insert( libraries, ('-l%s'):format(dependency:id()) );
+
+            if dependency.include_all_symbols then
+                table.insert( libraries, ('-force_load "%s"'):format(absolute(dependency)) );
+            end
+
         elseif prototype ~= toolset.Directory then
             table.insert( objects, relative(dependency) );
         end

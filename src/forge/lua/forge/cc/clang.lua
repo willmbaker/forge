@@ -204,6 +204,25 @@ function clang.link( toolset, target )
         local ldobjects = table.concat( objects, '" "' );
         local ldlibs = table.concat( libraries, ' ' );
         system( cxx, ('clang++ %s "%s" %s'):format(ldflags, ldobjects, ldlibs) );
+
+        if target.dynamic_libraries then
+            for _, library in ipairs(target.dynamic_libraries) do
+                local source        = root( toolset:interpolate('thirdparty/lib/${architecture}/${variant}/lib%s.dylib'):format(library) )
+                local destination   = branch( target ) .. ('/lib%s.dylib'):format(library);
+                local original_path = nil;
+
+                execute( '/usr/bin/otool', ('otool -D %s'):format(source), nil, nil, function(text) 
+                    original_path = text; --@!- This only works because the last line is the path we're seeking.
+                end );
+
+                rm( destination );
+                cp( destination, source );
+
+                local rpath = ('@loader_path/lib%s.dylib'):format( library );
+                execute( '/usr/bin/install_name_tool', ('install_name_tool -id "%s" "%s"'):format(rpath, destination) );
+                execute( '/usr/bin/install_name_tool', ('install_name_tool -change "%s" "%s" %s'):format(original_path, rpath, target) );
+            end
+        end
     end
     popd();
 end
@@ -446,6 +465,12 @@ function clang.append_link_libraries( toolset, target, libraries )
 
     if target.libraries then
         for _, library in ipairs(target.libraries) do
+            table.insert( libraries, ('-l%s'):format(library) );
+        end
+    end
+
+    if target.dynamic_libraries then
+        for _, library in ipairs(target.dynamic_libraries) do
             table.insert( libraries, ('-l%s'):format(library) );
         end
     end

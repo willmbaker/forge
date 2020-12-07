@@ -236,6 +236,18 @@ function clang.append_include_directories( toolset, target, flags )
             table.insert( flags, ('-I "%s"'):format(directory) );
         end
     end
+
+    if target.framework_directories then
+        for _, directory in ipairs(target.framework_directories) do
+            table.insert( flags, ('-F "%s"'):format(directory) );
+        end
+    end
+
+    if settings.framework_directories then
+        for _, directory in ipairs(settings.framework_directories) do
+            table.insert( flags, ('-F "%s"'):format(directory) );
+        end
+    end
 end
 
 function clang.append_compile_flags( toolset, target, flags )
@@ -343,6 +355,18 @@ function clang.append_library_directories( toolset, target, library_directories 
     if settings.library_directories then
         for _, directory in ipairs(settings.library_directories) do
             table.insert( library_directories, ('-L "%s"'):format(directory) );
+        end
+    end
+
+    if target.framework_directories then
+        for _, directory in ipairs(target.framework_directories) do
+            table.insert( library_directories, ('-F "%s"'):format(directory) );
+        end
+    end
+
+    if settings.framework_directories then
+        for _, directory in ipairs(settings.framework_directories) do
+            table.insert( library_directories, ('-F "%s"'):format(directory) );
         end
     end
 end

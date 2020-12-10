@@ -59,6 +59,7 @@ function gcc.initialize( toolset )
         framework_directories = {};
         generate_dsym_bundle = false;
         generate_map_file = true;
+        include_all_symbols = false;
         incremental_linking = true;
         link_time_code_generation = false;
         minimal_rebuild = true;
@@ -340,11 +341,11 @@ end
 function gcc.append_libraries( toolset, target, flags )
     local libraries = target:find_transitive_libraries();
     for _, library in ipairs(libraries) do
-        if library.whole_archive then 
+        if library.whole_archive or library.include_all_symbols then 
             table.insert( flags, '-Wl,--whole-archive' );
         end
         table.insert( flags, ('-l%s'):format(library:id()) );
-        if library.whole_archive then 
+        if library.whole_archive or library.include_all_symbols then 
             table.insert( flags, '-Wl,--no-whole-archive' );
         end
     end

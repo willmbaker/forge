@@ -166,11 +166,11 @@ function gcc.link( toolset, target )
     for _, dependency in forge:walk_dependencies(target) do
         local prototype = dependency:prototype();
         if prototype == toolset.StaticLibrary or prototype == toolset.DynamicLibrary then
-            if dependency.whole_archive then 
+            if dependency.whole_archive or dependency.include_all_symbols then 
                 table.insert( libraries, '-Wl,--whole-archive' );
             end
             table.insert( libraries, ('-l%s'):format(dependency:id()) );
-            if dependency.whole_archive then 
+            if dependency.whole_archive or dependency.include_all_symbols then 
                 table.insert( libraries, '-Wl,--no-whole-archive' );
             end
         elseif prototype ~= toolset.Directory then

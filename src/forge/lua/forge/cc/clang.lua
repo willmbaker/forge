@@ -345,6 +345,10 @@ function clang.append_compile_flags( toolset, target, flags )
         table.insert( flags, '-Wall -Wextra -Weverything' );
     end
 
+    if settings.unsigned_comparisons then
+        table.insert( flags, "-Wno-sign-compare" ); 
+    end
+
     if settings.unused_fields then
         table.insert( flags, '-Wno-unused-variable' );
         table.insert( flags, '-Wno-unused-private-field' );

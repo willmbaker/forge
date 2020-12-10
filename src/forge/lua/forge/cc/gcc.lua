@@ -289,6 +289,10 @@ function gcc.append_compile_flags( toolset, target, flags )
     elseif warning_level >= 2 then
         table.insert( flags, "-Wall -Wextra" );
     end
+
+    if settings.unsigned_comparisons then
+        table.insert( flags, "-Wno-sign-compare" ); 
+    end
 end
 
 function gcc.append_library_directories( toolset, target, library_directories )

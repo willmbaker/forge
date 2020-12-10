@@ -62,6 +62,7 @@ function clang.initialize( toolset )
         exceptions = true;
         fast_floating_point = false;
         generate_map_file = true;
+        include_all_symbols = false;
         incremental_linking = true;
         link_time_code_generation = false;
         minimal_rebuild = true;
@@ -383,6 +384,10 @@ function clang.append_libraries( toolset, target, flags )
     local libraries = target:find_transitive_libraries();
     for _, library in ipairs(libraries) do
         table.insert( flags, ('-l%s'):format(library:id()) );
+
+        if library.include_all_symbols then
+            table.insert( flags, ('-force_load "%s"'):format(absolute(library)) )
+        end
     end
 end
 

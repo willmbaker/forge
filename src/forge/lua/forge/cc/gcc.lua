@@ -124,7 +124,6 @@ function gcc.compile( toolset, target )
     local source = target:dependency();
     local output = target:filename();
     local input = absolute( source:filename() );
-    print( leaf(source:id()) );
     target:clear_implicit_dependencies();
     system( 
         gcc_, 
@@ -132,6 +131,7 @@ function gcc.compile( toolset, target )
         environment,
         toolset:dependencies_filter(target)
     );
+    print( leaf(source:id()) );
 end
 
 -- Archive objects into a static library. 

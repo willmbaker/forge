@@ -324,6 +324,11 @@ function clang.append_compile_flags( toolset, target, flags )
     else
         table.insert( flags, '-Wall -Wextra -Weverything' );
     end
+
+    if settings.unused_fields then
+        table.insert( flags, '-Wno-unused-variable' );
+        table.insert( flags, '-Wno-unused-private-field' );
+    end
 end
 
 function clang.append_library_directories( toolset, target, library_directories )

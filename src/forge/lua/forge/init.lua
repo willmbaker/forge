@@ -452,10 +452,6 @@ function forge:load()
     self.Settings = require 'forge.Settings';
     self.Toolset = require 'forge.Toolset';
 
-    if variant or self.variant then 
-        self.cache = root( ('%s/.forge'):format(variant or self.variant) );
-    end
-
     load_binary( self.cache );
 end
 

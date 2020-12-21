@@ -287,6 +287,7 @@ function gcc.append_compile_flags( toolset, target, flags )
     if settings.unused_fields then
         table.insert( flags, '-Wno-unused-variable' );
         table.insert( flags, '-Wno-unused-but-set-variable' );
+        table.insert( flags, '-Wno-unused-local-typedefs' );
     end    
 
     if settings.unsigned_comparisons then
